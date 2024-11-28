@@ -19,6 +19,14 @@ def generate_options_keyboard(answer_options, right_answer):
 
     builder.adjust(1)
     return builder.as_markup()
+
+async def new_quiz(message):
+    user_id = message.from_user.id
+    current_question_index = 0
+    await update_quiz_index(user_id, current_question_index)
+    await get_question(message, user_id)
+
+
 # Хэндлер на команду /start
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
@@ -29,7 +37,6 @@ async def cmd_start(message: types.Message):
 
 async def get_question(message, user_id):
 
-    # Получение текущего вопроса из словаря состояний пользователя
     current_question_index = await get_quiz_index(user_id)
     correct_index = quiz_data[current_question_index]['correct_option']
     opts = quiz_data[current_question_index]['options']
@@ -50,3 +57,4 @@ async def cmd_quiz(message: types.Message):
 
     await message.answer(f"Давайте начнем квиз!")
     await new_quiz(message)
+    
